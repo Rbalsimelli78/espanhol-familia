@@ -1,6 +1,6 @@
 // Service worker: guarda os arquivos do app para abrir mais rápido e funcionar com internet fraca.
 // Ao publicar uma versão nova, aumente o número abaixo.
-const VERSAO = "esp-v1";
+const VERSAO = "esp-v2";
 const ARQUIVOS = ["./", "index.html", "styles.css", "app.js", "content.js", "firebase-config.js", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {

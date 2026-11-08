@@ -1,5 +1,8 @@
 // Espanhol Família — app principal
-import { DECKS, FRASES, CRONOGRAMA, LIVROS, LINKS, TRILHAS } from "./content.js";
+import { DECKS, FRASES, CRONOGRAMA, LIVROS, LINKS, TRILHAS, VERSICULOS } from "./content.js";
+
+// Bandeira desenhada (o Windows não mostra o emoji de bandeira)
+const BANDEIRA = `<svg class="bandeira" viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#c60b1e"/><rect y=".5" width="3" height="1" fill="#f1b51c"/></svg>`;
 import { firebaseConfig, ADMIN_EMAIL, FIREBASE_VERSION } from "./firebase-config.js";
 
 const DEMO = new URLSearchParams(location.search).has("demo");
@@ -283,7 +286,7 @@ function render(html) { $app.innerHTML = html; }
 function telaLogin() {
   render(`
     <div class="login">
-      <div class="logo">🇪🇸</div>
+      <div class="logo">${BANDEIRA}</div>
       <h1>Espanhol Família</h1>
       <p class="muted">Vocabulário, pronúncia e a vida na Espanha — no ritmo de cada um.</p>
       <button class="btn btn-google" id="btnEntrar">
@@ -356,7 +359,7 @@ const ABAS = [
   ["vocab", "📚", "Palavras"],
   ["pron", "🎤", "Pronúncia"],
   ["plano", "🗓️", "Plano"],
-  ["espanha", "🇪🇸", "Espanha"],
+  ["espanha", BANDEIRA, "Espanha"],
 ];
 
 function desenhar() {
@@ -367,7 +370,7 @@ function desenhar() {
   }[S.tela]();
   render(`
     <header class="topo">
-      <div class="marca">🇪🇸 <span>Espanhol Família</span>${S.store.demo ? ' <em class="tag">demo</em>' : ""}</div>
+      <div class="marca">${BANDEIRA} <span>Espanhol Família</span>${S.store.demo ? ' <em class="tag">demo</em>' : ""}</div>
       <button class="avatar" id="btnConta" title="Conta">${esc((S.perfil.nome || "?")[0].toUpperCase())}</button>
     </header>
     <main id="conteudo">${conteudo}</main>
@@ -459,6 +462,7 @@ function telaInicio() {
         <p class="small muted">🔥 Sequência: <b>${sequencia()}</b> dia(s) · 📘 ${totalAprend} palavras aprendidas</p>
       </div>
     </section>
+    ${cartaoVersiculo()}
     <section class="cartao">
       <h3>Hoje no plano · ${plano.dia}</h3>
       <p>${esc(plano.tarefa)}</p>
@@ -470,6 +474,21 @@ function telaInicio() {
     <section class="cartao">
       <h3>Últimos 7 dias</h3>
       ${barras(S.dias, 7, meta)}
+    </section>`;
+}
+
+function versiculoDoDia() {
+  const d = new Date();
+  const n = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  return VERSICULOS[(n + d.getFullYear()) % VERSICULOS.length];
+}
+function cartaoVersiculo() {
+  const v = versiculoDoDia();
+  return `<section class="cartao versiculo">
+      <h3>📖 Versículo del día</h3>
+      <p class="es">“${esc(v.es)}”</p>
+      <p class="ref">${esc(v.ref)} <button class="som" data-falar="${esc(v.es)}">🔊</button></p>
+      <details><summary>Ver em português</summary><p class="muted">${esc(v.pt)}</p></details>
     </section>`;
 }
 
